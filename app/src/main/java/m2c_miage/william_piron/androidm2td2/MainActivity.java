@@ -1,10 +1,16 @@
 package m2c_miage.william_piron.androidm2td2;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 import m2c_miage.william_piron.androidm2td2.Adapter.ListAdapter;
 import m2c_miage.william_piron.androidm2td2.Models.Movie;
+import m2c_miage.william_piron.androidm2td2.Permissions.Permissions;
 import m2c_miage.william_piron.androidm2td2.Utils.ImageDownloaderThread;
 import m2c_miage.william_piron.androidm2td2.Utils.MyThreadFactory;
 
@@ -28,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     public ArrayAdapter<Movie> adapter;
     private Button refresh;
     private Button add;
+    private Button askPerm;
     public static Handler handlerTui = new Handler(Looper.getMainLooper());
     public HandlerThread handlerThread = new HandlerThread("handlerThread");
     public Handler handler2;
@@ -71,5 +79,52 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        askPerm = findViewById(R.id.buttonAskPerm);
+        askPerm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Permissions perms = new Permissions(MainActivity.this);
+                perms.askPerms();
+            }
+        });
+
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    1);
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    2);
+
+        } else {
+            // Permission has already been granted
+        }
+
+
+
+    }
+
+
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.i(this.getClass().getCanonicalName(), "OnRequestResult");
+        for (int i = 0; i < permissions.length; i++) {
+            String permission = permissions[i];
+            int grantResult = grantResults[i];
+
+            if (permission.equals(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                if (grantResult == PackageManager.PERMISSION_DENIED) {
+                    MainActivity.this.finish();
+                }
+
+            }
+            if (permission.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                if (grantResult == PackageManager.PERMISSION_DENIED) {
+                    MainActivity.this.finish();
+                }
+            }
+        }
     }
 }

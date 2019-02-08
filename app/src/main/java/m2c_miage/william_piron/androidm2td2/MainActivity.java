@@ -17,12 +17,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
+import javax.crypto.Cipher;
 
 import m2c_miage.william_piron.androidm2td2.Adapter.ListAdapter;
 import m2c_miage.william_piron.androidm2td2.Models.Movie;
@@ -36,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     private Button refresh;
     private Button add;
     private Button askPerm;
+    private Button save;
+    private Button load;
     public static Handler handlerTui = new Handler(Looper.getMainLooper());
     public HandlerThread handlerThread = new HandlerThread("handlerThread");
     public Handler handler2;
@@ -88,6 +94,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        save = findViewById(R.id.buttonSave);
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveAndCipher();
+            }
+        });
+
+        load = findViewById(R.id.buttonLoad);
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadAndDecipher();
+            }
+        });
+
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
@@ -126,5 +148,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    public void saveAndCipher(){
+
+    }
+
+    public void loadAndDecipher(){
+
     }
 }

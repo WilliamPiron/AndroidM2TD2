@@ -4,7 +4,7 @@
     android:layout_height="wrap_content">
 
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/passworddecipher"
         android:inputType="textPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +16,7 @@
         android:hint="Password"/>
 
     <Button
-        android:id="@+id/buttonsaveandcipherdialog"
+        android:id="@+id/buttonloadanddecipherdialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Load" />

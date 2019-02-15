@@ -1,7 +1,7 @@
 package m2c_miage.william_piron.androidm2td2;
 
 import android.Manifest;
-import android.app.Activity;
+import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -15,18 +15,16 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import javax.crypto.Cipher;
 
 import m2c_miage.william_piron.androidm2td2.Adapter.ListAdapter;
 import m2c_miage.william_piron.androidm2td2.Models.Movie;
@@ -103,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         load = findViewById(R.id.buttonLoad);
-        save.setOnClickListener(new View.OnClickListener() {
+        load.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 loadAndDecipher();
@@ -151,10 +149,56 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void saveAndCipher(){
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.setContentView(R.layout.dialog_saveandcipher);
+        dialog.setTitle("Password");
+        dialog.setCancelable(true);
 
+        final EditText password = dialog.findViewById(R.id.passwordcipher);
+
+        Button button = dialog.findViewById(R.id.buttonsaveandcipherdialog);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(password.getText().toString().equals("toto")){
+                    // showToast
+                    Toast.makeText(getApplicationContext(), "Good password", Toast.LENGTH_SHORT).show();
+                } else{
+                    dialog.dismiss();
+                    // other stuff to do
+                    Toast.makeText(getApplicationContext(), "Wrong password", Toast.LENGTH_SHORT).show();
+                }
+                dialog.cancel();
+            }
+        });
+
+        dialog.show();
     }
 
     public void loadAndDecipher(){
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.setContentView(R.layout.dialog_loadanddecipher);
+        dialog.setTitle("Password");
+        dialog.setCancelable(true);
 
+        final EditText password = dialog.findViewById(R.id.passworddecipher);
+
+        Button button = dialog.findViewById(R.id.buttonloadanddecipherdialog);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(password.getText().toString().equals("toto")){
+                    // showToast
+                    Toast.makeText(getApplicationContext(), "Good password", Toast.LENGTH_SHORT).show();
+                } else{
+                    dialog.dismiss();
+                    // other stuff to do
+                    Toast.makeText(getApplicationContext(), "Wrong password", Toast.LENGTH_SHORT).show();
+                }
+                dialog.cancel();
+            }
+        });
+
+        dialog.show();
     }
 }

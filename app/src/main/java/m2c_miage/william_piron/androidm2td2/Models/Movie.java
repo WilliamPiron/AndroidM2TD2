@@ -2,7 +2,9 @@ package m2c_miage.william_piron.androidm2td2.Models;
 
 import android.graphics.Bitmap;
 
-public class Movie {
+import java.io.Serializable;
+
+public class Movie implements Serializable {
 
     private String imageUrl;
     private String name;

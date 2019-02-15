@@ -11,7 +11,8 @@ public class Movie implements Serializable {
     private String date;
     private String prod;
     private String real;
-    private Bitmap image;
+    //private Bitmap image;
+    private byte[] image;
 
     public Movie(String imageUrl, String name, String date, String prod, String real) {
         this.imageUrl = imageUrl;
@@ -31,11 +32,17 @@ public class Movie implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    public Bitmap getImage() {
+    /*public Bitmap getImage() {
+        return image;
+    }*/
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(Bitmap image) {
+    /*public void setImage(Bitmap image) {
+        this.image = image;
+    }*/
+    public void setImage(byte[] image) {
         this.image = image;
     }
 

@@ -3,11 +3,14 @@ package m2c_miage.william_piron.androidm2td2.Utils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.ByteBuffer;
 
 import m2c_miage.william_piron.androidm2td2.MainActivity;
 import m2c_miage.william_piron.androidm2td2.Models.Movie;
@@ -29,7 +32,11 @@ public class ImageDownloaderThread implements Runnable {
             url = new URL(movie.getImageUrl());
             URLConnection conn = url.openConnection();
             bitmap = BitmapFactory.decodeStream(conn.getInputStream());
-            movie.setImage(bitmap);
+            OutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 10, stream);
+            movie.setImage(((ByteArrayOutputStream) stream).toByteArray());
+
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -52,6 +59,17 @@ public class ImageDownloaderThread implements Runnable {
                 mainActivity.adapter.notifyDataSetChanged();
             }
         });*/
+    }
+
+    private byte[] BitmapToByte (Bitmap bitmap){
+        byte [] bytearray;
+        int size = bitmap.getRowBytes() * bitmap.getHeight();
+
+        ByteBuffer byteBuffer = ByteBuffer.allocate(size);
+        bitmap.copyPixelsToBuffer(byteBuffer);
+        bytearray = byteBuffer.array();
+
+        return bytearray;
     }
 
 }

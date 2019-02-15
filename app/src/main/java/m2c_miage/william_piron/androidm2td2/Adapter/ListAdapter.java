@@ -1,6 +1,8 @@
 package m2c_miage.william_piron.androidm2td2.Adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -11,6 +13,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.List;
 
 import m2c_miage.william_piron.androidm2td2.Models.Movie;
@@ -50,7 +55,13 @@ public class ListAdapter extends ArrayAdapter<Movie> {
         movieReal.setText(movie.getReal());
 
         if(movie.getImage() != null) {
-            movieImage.setImageBitmap(movie.getImage());
+            //movieImage.setImageBitmap(movie.getImage());
+            /*byte[] arraytmp = movie.getImage();
+            Bitmap bmp = BitmapFactory.decodeByteArray(arraytmp, 0, arraytmp.length);
+            movieImage.setImageBitmap(bmp);*/
+            InputStream stream = new ByteArrayInputStream(movie.getImage());
+            Bitmap bitmap = BitmapFactory.decodeStream(stream);
+            movieImage.setImageBitmap(bitmap);
         } else {
             movieImage.setImageBitmap(null);
         }

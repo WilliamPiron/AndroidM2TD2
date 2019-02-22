@@ -2,9 +2,11 @@ package m2c_miage.william_piron.androidm2td2.Models;
 
 import android.graphics.Bitmap;
 
+import com.orm.SugarRecord;
+
 import java.io.Serializable;
 
-public class Movie implements Serializable {
+public class Movie extends SugarRecord {
 
     private String imageUrl;
     private String name;

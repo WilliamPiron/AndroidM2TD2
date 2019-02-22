@@ -3,9 +3,11 @@ package m2c_miage.william_piron.androidm2td2;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +21,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.orm.SugarContext;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -46,11 +51,19 @@ public class MainActivity extends AppCompatActivity {
     private ThreadPoolExecutor threadPoolExecutor;
     private BlockingQueue<Runnable> mDecodeWorkQueue = new LinkedBlockingQueue<Runnable>();
     private MyThreadFactory myThreadFactory = new MyThreadFactory();
+    private List<Movie> movies = new ArrayList<Movie>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onDestroy() {
+        super.onDestroy();
+        SugarContext.terminate();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SugarContext.init(getApplicationContext());
         final List<Movie> movies = new ArrayList<Movie>();
         movies.add(new Movie("https://image.tmdb.org/t/p/w1280/xjeYI75uMBtBjNlJ0cDJZDFg5Yv.jpg", "Silent Voice", "2016", "Naoko Yamada", "Reiko Yoshida"));
         movies.add(new Movie("https://image.tmdb.org/t/p/w1280/vpQxNHhS6BxmwKiWoUUPancE4mV.jpg", "Your Name", "2016", "Makoto Shinkai", "Makoto Shinkai"));
@@ -105,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 loadAndDecipher();
+                adapter.notifyDataSetChanged();
             }
         });
 
@@ -163,6 +177,13 @@ public class MainActivity extends AppCompatActivity {
                 if(password.getText().toString().equals("toto")){
                     // showToast
                     Toast.makeText(getApplicationContext(), "Good password", Toast.LENGTH_SHORT).show();
+                    Iterator<Movie> tmpIterator = movies.iterator();
+                    Log.w("ITERATOR", "Iterator created");
+                    while(tmpIterator.hasNext()){
+                        Log.w("LOOP", "Looping...");
+                        tmpIterator.next().save();
+                        Log.w("SAVED", "Saved a movie");
+                    }
                 } else{
                     dialog.dismiss();
                     // other stuff to do
@@ -185,11 +206,21 @@ public class MainActivity extends AppCompatActivity {
 
         Button button = dialog.findViewById(R.id.buttonloadanddecipherdialog);
         button.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
                 if(password.getText().toString().equals("toto")){
                     // showToast
                     Toast.makeText(getApplicationContext(), "Good password", Toast.LENGTH_SHORT).show();
+                    Iterator<Movie> movieIterator = Movie.findAll(Movie.class);
+                    List tmplist = new ArrayList<Movie>();
+                    while(movieIterator.hasNext()){
+                        tmplist.add(movieIterator.next());
+                    }
+                    if (!tmplist.isEmpty()) {
+                        movies.clear();
+                        movies.addAll(tmplist);
+                    }
                 } else{
                     dialog.dismiss();
                     // other stuff to do
@@ -201,4 +232,6 @@ public class MainActivity extends AppCompatActivity {
 
         dialog.show();
     }
+
+
 }
